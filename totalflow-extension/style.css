@@ -1,0 +1,62 @@
+/* NOTES
+
+COLORS
+purple: #bb86fc
+
+very gray: #121212
+gray: #212121
+youtube-gray-button: #272727
+youtube-background: #0f0f0f
+light gray: #393939
+
+youtube-white: #f1f1f1
+light white: #f0f0f0
+*/
+
+body {
+  width: 250px;
+  padding: 20px 40px;
+  background-color: #151515;
+}
+
+h1 {
+  margin-bottom: 0px;
+  color: #f1f1f1;
+}
+
+p {
+  margin-top: 0px;
+  color: #f1f1f1;
+}
+
+time {
+  font-size: 36px;
+  color: #f1f1f1;
+  font-weight: bold;
+
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  background-color: #272727;
+  color: #f1f1f1;
+  border-radius: 10pt;
+  border: none;
+  padding: 15px 30px;
+  text-align: center;
+  font-size: 25px;
+  font-weight: bold;
+  margin: 10px 2px;
+  transition: 0.3s;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #393939;
+}
