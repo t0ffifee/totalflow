@@ -1,27 +1,32 @@
 {
-    "manifest_version": 3,
-    "name": "TotalFlow",
-    "description": "Keeps track of your total focus time",
-    "version": "1.0",
-    "action": {
-        "default_popup": "popup.html",
-        "default_icon": "images/hello_extensions.png"
-    },
-    "permissions": [
-        "activeTab",
-        "scripting",
-        "storage",
-        "unlimitedStorage"
-    ],
-    "content_scripts": [
-        {
-            "js": [
-                "scripts/stopwatch.js"
-            ],
-            "matches": [
-                "https://developer.chrome.com/docs/extensions/*",
-                "https://developer.chrome.com/docs/webstore/*"
-            ]
-        }
-    ]
+  "manifest_version": 3,
+  "name": "TotalFlow",
+  "description": "Keeps track of your total focus time",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "images/icon16.png",
+    "32": "images/icon32.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "unlimitedStorage"
+  ],
+  "content_scripts": [
+    {
+      "js": [
+        "scripts/stopwatch.js"
+      ],
+      "matches": [
+        "https://developer.chrome.com/docs/extensions/*",
+        "https://developer.chrome.com/docs/webstore/*"
+      ]
+    }
+  ]
 }

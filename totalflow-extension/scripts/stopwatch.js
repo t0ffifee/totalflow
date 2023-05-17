@@ -31,10 +31,10 @@ function initHomePage() {
   // UI
   // CHANGE HTML ELEMENTS
   var subText = document.getElementById('subText');
-  subText.innerHTML = 'Start the timer and get into the flow';
+  subText.innerHTML = 'start the timer and get to work';
 
   var mainButton = document.getElementById('mainButton');
-  mainButton.innerHTML = "Start Working"
+  mainButton.innerHTML = "start working"
 
   var stopwatch = document.getElementById('stopwatch');
   stopwatch.innerHTML = '';
@@ -52,10 +52,10 @@ function initWorkPage() {
   // UI
   // CHANGE HTML ELEMENTS
   var subText = document.getElementById('subText');
-  subText.innerHTML = 'Go get some shit done';
+  subText.innerHTML = 'get to work';
 
   var mainButton = document.getElementById('mainButton');
-  mainButton.innerHTML = 'Stop Working';
+  mainButton.innerHTML = 'stop working';
 
   // LOGIC
   // UPDATING VARIABLES

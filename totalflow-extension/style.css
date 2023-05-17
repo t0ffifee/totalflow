@@ -16,7 +16,7 @@ light white: #f0f0f0
 body {
   width: 250px;
   padding: 20px 40px;
-  background-color: #151515;
+  background-color: #161c26;
 }
 
 h1 {
@@ -42,7 +42,7 @@ time {
 }
 
 .button {
-  background-color: #272727;
+  background-color: #2f343d;
   color: #f1f1f1;
   border-radius: 10pt;
   border: none;
@@ -58,5 +58,5 @@ time {
 }
 
 .button:hover {
-  background-color: #393939;
+  background-color: #434a56;
 }
