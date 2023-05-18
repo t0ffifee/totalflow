@@ -4,20 +4,43 @@
 <head>
   <title>Total Flow</title>
   <link rel="stylesheet" href="style.css">
-  <script src="contentScript.js" type="module"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <script src="popup.js" type="module"></script>
 </head>
 
 <body>
-  <h1>total flow</h1>
-  <p id="subText">start the timer and get to work</p>
-  <div>
-    <div class="center">
-      <button class="button" id="mainButton">start working</button>
+  <header>
+    <div class="icon-bar">
+      <a class="active" id="homeLink"><i class="material-icons">home</i></a>
+      <a id="statsLink"><i class="material-icons">bar_chart</i></a>
+      <a id="settingsLink"><i class="material-icons">settings</i></a>
     </div>
-    <div class="center">
-      <time id="stopwatch"></time>
+  </header>
+
+  <main>
+    <div id="homeContent" class="content selected">
+      <h1>total flow</h1>
+      <p id="subText">start the timer and get to work</p>
+      <div>
+        <div class="center">
+          <button class="button" id="mainButton">start working</button>
+        </div>
+        <div class="center">
+          <time id="stopwatch"></time>
+        </div>
+      </div>
     </div>
-  </div>
+
+    <div id="statsContent" class="content">
+      <h1>stats</h1>
+    </div>
+
+    <div id="settingsContent" class="content">
+      <h1>settings</h1>
+    </div>
+
+  </main>
+
 </body>
 
 </html>

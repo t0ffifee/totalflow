@@ -17,12 +17,5 @@
     "scripting",
     "storage",
     "unlimitedStorage"
-  ],
-  "content_scripts": [
-    {
-      "js": [
-        "contentScript.js"
-      ]
-    }
   ]
 }

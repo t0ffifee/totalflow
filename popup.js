@@ -4,7 +4,10 @@ var timerIntervalID;
 
 // EVENT LISTENERS
 document.getElementById('mainButton').addEventListener('click', router);
-document.addEventListener('DOMContentLoaded', reloadExtension);
+document.addEventListener('DOMContentLoaded', function () {
+  loadExtension();
+  setupNavbar();
+});
 
 function router() {
   console.log("clicked on main button");
@@ -18,13 +21,47 @@ function router() {
   }
 }
 
-function reloadExtension() {
+function loadExtension() {
   var running = localStorage.getItem('running');
   if (running == 'true') {
     initWorkPage();
   } else {
     initHomePage();
   }
+}
+
+function setupNavbar() {
+  var homeLink = document.getElementById('homeLink');
+  var statsLink = document.getElementById('statsLink');
+  var settingsLink = document.getElementById('settingsLink');
+
+  function clearClasses() {
+    // clearing active class from active icon link
+    let activeLink = document.getElementsByClassName('active')[0];
+    activeLink.classList.remove('active');
+
+    // clearing selected class from selected content
+    let selectedContent = document.getElementsByClassName('selected')[0];
+    selectedContent.classList.remove('selected');
+  }
+
+  function addSelected(id) {
+    let content = document.getElementById(id);
+    content.classList.add('selected');
+  }
+
+  function buttonSetup(linkElement, contentID) {
+    linkElement.addEventListener('click', function (e) {
+      e.preventDefault();
+      clearClasses();
+      linkElement.classList.add('active');
+      addSelected(contentID);
+    });
+  }
+
+  buttonSetup(homeLink, 'homeContent');
+  buttonSetup(statsLink, 'statsContent');
+  buttonSetup(settingsLink, 'settingsContent');
 }
 
 function initHomePage() {

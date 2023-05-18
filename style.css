@@ -13,10 +13,16 @@ youtube-white: #f1f1f1
 light white: #f0f0f0
 */
 
+/* ========= GENERAL ========= */
+
 body {
+  margin: 0px;
+  background-color: #161c26;
+}
+
+main {
   width: 250px;
   padding: 20px 40px;
-  background-color: #161c26;
 }
 
 h1 {
@@ -33,13 +39,14 @@ time {
   font-size: 36px;
   color: #f1f1f1;
   font-weight: bold;
-
 }
 
 .center {
   display: flex;
   justify-content: center;
 }
+
+/* ========= BUTTON ========= */
 
 .button {
   background-color: #2f343d;
@@ -59,4 +66,41 @@ time {
 
 .button:hover {
   background-color: #434a56;
+}
+
+/* ========= ICON BAR ========= */
+
+.icon-bar {
+  /* width: 200%; */
+  /* background-color: #252f41; */
+  background-color: #2f343d;
+  overflow: auto;
+}
+
+.icon-bar a {
+  float: left;
+  width: 33.333%;
+  text-align: center;
+  padding: 12px 0;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 12px;
+}
+
+.icon-bar a:hover {
+  background-color: #434a56;
+}
+
+.active {
+  background-color: #415371;
+}
+
+/* ========= CONTENT ========= */
+
+.content {
+  display: none;
+}
+
+.content.selected {
+  display: block;
 }
