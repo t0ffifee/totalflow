@@ -1,8 +1,8 @@
-// GLOBAL VARIABLES
+import { setLocalStorageItem } from './localStorageUtils.js';
+
 var startTime;
 var timerIntervalID;
 
-// EVENT LISTENERS
 document.getElementById('mainButton').addEventListener('click', router);
 document.addEventListener('DOMContentLoaded', function () {
   loadExtension();
@@ -34,6 +34,8 @@ function setupNavbar() {
   var homeLink = document.getElementById('homeLink');
   var statsLink = document.getElementById('statsLink');
   var settingsLink = document.getElementById('settingsLink');
+
+  setLocalStorageItem('focus-time', [1, 2, 3]);
 
   function clearClasses() {
     // clearing active class from active icon link
@@ -130,3 +132,4 @@ function displayStopwatch() {
 
   document.getElementById('stopwatch').innerHTML = time[0] + ':' + time[1] + ':' + time[2];
 }
+

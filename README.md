@@ -1,4 +1,6 @@
-# total flow
+<p align="center">
+  <img src="images/icon128.png">
+</p>
 
 ## current features
  - start a stopwatch when you want to focus (and stop when done)
