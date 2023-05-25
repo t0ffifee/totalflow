@@ -35,7 +35,9 @@ function setupNavbar() {
   var statsLink = document.getElementById('statsLink');
   var settingsLink = document.getElementById('settingsLink');
 
-  setLocalStorageItem('focus-time', [1, 2, 3]);
+  setLocalStorageItem('daily-goal', 2);
+  setLocalStorageItem('past-days', [1, 0, 0, 0, 0, 0, 0]);
+  setLocalStorageItem('total', 100);
 
   function clearClasses() {
     // clearing active class from active icon link
