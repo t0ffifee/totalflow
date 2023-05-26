@@ -1,22 +1,80 @@
-import { setLocalStorageItem } from './localStorageUtils.js';
+// TODO can we do in a better way? 
+import { getLocalStorageItem, setLocalStorageItem } from './localStorageUtils.js';
 
+const dbName = 'totalflowDB';
+const objectStoreName = 'flows';
+
+var db; // database object --> will maybe become database store object
 var startTime;
 var timerIntervalID;
 
 document.getElementById('mainButton').addEventListener('click', router);
 document.addEventListener('DOMContentLoaded', function () {
+  setupDatabase();
   loadExtension();
   setupNavbar();
 });
+
+function setupDatabase() {
+  const DBOpenRequest = indexedDB.open(dbName);
+
+  DBOpenRequest.onerror = (event) => {
+    console.log('oops');
+    // need to add a lot of error handling
+  };
+
+  DBOpenRequest.onsuccess = (event) => {
+    console.log('we opened the database');
+    db = event.target.result;
+  };
+
+  DBOpenRequest.onupgradeneeded = (event) => {
+    db = event.target.result;
+
+    // Create an objectStore for this database
+    const objectStore = db.createObjectStore("flows");
+
+    objectStore.createIndex('startdate', 'startdate', { unique: false });
+    objectStore.createIndex('elapsedTime', 'elapsedTime', { unique: false });
+  };
+}
+
+function saveTime() {
+  let now = Date.now();
+  let elapsed = now - startTime;
+
+  const flow = { startdate: startTime, elapsedTime: elapsed };
+
+  const transaction = db.transaction(['flows'], 'readwrite');
+  const objectStore = transaction.objectStore('flows');
+  const addRequest = objectStore.add(flow);
+
+  addRequest.onsuccess = () => {
+    console.log('Data added successfully');
+  };
+
+  addRequest.onerror = (event) => {
+    console.error('Error adding data:', event.target.error);
+  };
+
+  transaction.oncomplete = () => {
+    console.log('Transaction completed');
+  };
+
+  transaction.onerror = (event) => {
+    console.error('Transaction error:', event.target.error);
+  };
+}
 
 function router() {
   console.log("clicked on main button");
   var running = localStorage.getItem('running');
   if (running == 'true') {
-    console.log('going to homepage');
+    console.log('stopping the timer');
     initHomePage();
+    saveTime();
   } else {
-    console.log('going to workpage');
+    console.log('starting the timer');
     initWorkPage();
   }
 }
@@ -35,9 +93,7 @@ function setupNavbar() {
   var statsLink = document.getElementById('statsLink');
   var settingsLink = document.getElementById('settingsLink');
 
-  setLocalStorageItem('daily-goal', 2);
-  setLocalStorageItem('past-days', [1, 0, 0, 0, 0, 0, 0]);
-  setLocalStorageItem('total', 100);
+  setLocalStorageItem('dailyFocusTimeGoal', 2);
 
   function clearClasses() {
     // clearing active class from active icon link
