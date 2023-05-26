@@ -10,31 +10,70 @@ var timerIntervalID;
 
 document.getElementById('mainButton').addEventListener('click', router);
 document.addEventListener('DOMContentLoaded', function () {
-  setupDatabase();
+
+  // setupDatabase();
+
+  setupDatabase()
+    .then((db) => {
+      // Database is successfully opened, perform extension initialization here
+      // You can access the opened database object (`db`) within this scope
+      calculateTotalFocusTime();
+    })
+    .catch((error) => {
+      console.error('Failed to open the database:', error);
+    });
   loadExtension();
   setupNavbar();
+
 });
 
 function setupDatabase() {
-  const DBOpenRequest = indexedDB.open(dbName);
 
-  DBOpenRequest.onerror = (event) => {
-    console.log('oops');
-    // need to add a lot of error handling
-  };
+  return new Promise((resolve, reject) => {
+    const DBOpenRequest = indexedDB.open(dbName);
 
-  DBOpenRequest.onsuccess = (event) => {
-    console.log('we opened the database');
-    db = event.target.result;
-  };
+    DBOpenRequest.onerror = (event) => {
+      console.log('oops');
+      // need to add a lot of error handling
+    };
 
-  DBOpenRequest.onupgradeneeded = (event) => {
-    db = event.target.result;
+    DBOpenRequest.onsuccess = (event) => {
+      console.log('we opened the database');
+      db = event.target.result;
+    };
 
-    const objectStore = db.createObjectStore("flows", { keyPath: 'initiatedAt' });
+    DBOpenRequest.onupgradeneeded = (event) => {
+      db = event.target.result;
 
-    objectStore.createIndex('durationIndex', 'duration', { unique: false });
-  };
+      const objectStore = db.createObjectStore("flows", { keyPath: 'initiatedAt' });
+
+      objectStore.createIndex('durationIndex', 'duration', { unique: false });
+    };
+
+  });
+}
+
+function openDatabase() {
+  return new Promise((resolve, reject) => {
+    const openRequest = indexedDB.open('FlowDatabase', 1);
+
+    openRequest.onupgradeneeded = (event) => {
+      const db = event.target.result;
+
+      if (!db.objectStoreNames.contains('flows')) {
+        db.createObjectStore('flows', { keyPath: 'initiatedAt' });
+      }
+    };
+
+    openRequest.onsuccess = (event) => {
+      const db = event.target.result;
+      resolve(db);
+    };
+
+    openRequest.onerror = (event) => {
+      reject(event.target.error);
+    };
+  });
 }
 
 function saveTime() {
@@ -61,6 +100,30 @@ function saveTime() {
 
   transaction.onerror = (event) => {
     console.error('Transaction error:', event.target.error);
+  };
+}
+
+function calculateTotalFocusTime() {
+  const transaction = db.transaction(['flows'], 'readonly');
+  const objectStore = transaction.objectStore('flows');
+  const durationIndex = objectStore.index('durationIndex');
+
+  const sumRequest = durationIndex.openCursor();
+
+  let sum = 0;
+
+  sumRequest.onsuccess = (event) => {
+    const cursor = event.target.result;
+    if (cursor) {
+      sum += cursor.value.duration;
+      cursor.continue();
+    } else {
+      console.log('Total duration sum:', sum);
+    }
+  };
+
+  sumRequest.onerror = (event) => {
+    console.error('Error calculating sum:', event.target.error);
   };
 }
 
