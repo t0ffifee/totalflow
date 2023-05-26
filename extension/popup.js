@@ -31,11 +31,9 @@ function setupDatabase() {
   DBOpenRequest.onupgradeneeded = (event) => {
     db = event.target.result;
 
-    // Create an objectStore for this database
-    const objectStore = db.createObjectStore("flows");
+    const objectStore = db.createObjectStore("flows", { keyPath: 'initiatedAt' });
 
-    objectStore.createIndex('startdate', 'startdate', { unique: false });
-    objectStore.createIndex('elapsedTime', 'elapsedTime', { unique: false });
+    objectStore.createIndex('durationIndex', 'duration', { unique: false });
   };
 }
 
@@ -43,7 +41,7 @@ function saveTime() {
   let now = Date.now();
   let elapsed = now - startTime;
 
-  const flow = { startdate: startTime, elapsedTime: elapsed };
+  const flow = { initiatedAt: startTime, duration: elapsed };
 
   const transaction = db.transaction(['flows'], 'readwrite');
   const objectStore = transaction.objectStore('flows');
