@@ -12,34 +12,35 @@ document.getElementById('mainButton').addEventListener('click', router);
 document.addEventListener('DOMContentLoaded', function () {
 
   // setupDatabase();
-
+  // Call the setupDatabase() function
   setupDatabase()
-    .then((db) => {
-      // Database is successfully opened, perform extension initialization here
-      // You can access the opened database object (`db`) within this scope
+    .then(function () {
+      // Perform your desired operations after setupDatabase() is finished
+      // Example: Query data, update records, etc.
       calculateTotalFocusTime();
+      loadExtension();
+      setupNavbar();
     })
-    .catch((error) => {
-      console.error('Failed to open the database:', error);
+    .catch(function (error) {
+      // Handle any errors that occur during setupDatabase()
+      console.log("Error setting up the database: " + error);
     });
-  loadExtension();
-  setupNavbar();
-
 });
 
 function setupDatabase() {
-
-  return new Promise((resolve, reject) => {
+  return new Promise(function (resolve, reject) {
     const DBOpenRequest = indexedDB.open(dbName);
 
     DBOpenRequest.onerror = (event) => {
       console.log('oops');
+      reject(event.target.error);
       // need to add a lot of error handling
     };
 
     DBOpenRequest.onsuccess = (event) => {
       console.log('we opened the database');
       db = event.target.result;
+      resolve(db);
     };
 
     DBOpenRequest.onupgradeneeded = (event) => {
@@ -51,8 +52,10 @@ function setupDatabase() {
     };
 
   });
+
 }
 
+// deze niet meer nodig denk ik??
 function openDatabase() {
   return new Promise((resolve, reject) => {
     const openRequest = indexedDB.open('FlowDatabase', 1);
@@ -103,28 +106,59 @@ function saveTime() {
   };
 }
 
+// function calculateTotalFocusTime() {
+//   const transaction = db.transaction(['flows'], 'readonly');
+//   const objectStore = transaction.objectStore('flows');
+//   const durationIndex = objectStore.index('durationIndex');
+
+//   const sumRequest = durationIndex.openCursor();
+
+//   let sum = 0;
+
+//   sumRequest.onsuccess = (event) => {
+//     const cursor = event.target.result;
+//     if (cursor) {
+//       sum += cursor.value.duration;
+//       cursor.continue();
+//     } else {
+//       console.log('cursor sum:', sum);
+//     }
+//   };
+
+//   sumRequest.onerror = (event) => {
+//     console.error('Error calculating sum:', event.target.error);
+//   };
+
+//   console.log('end of function sum:', sum);
+//   return sum;
+// }
+
 function calculateTotalFocusTime() {
-  const transaction = db.transaction(['flows'], 'readonly');
-  const objectStore = transaction.objectStore('flows');
-  const durationIndex = objectStore.index('durationIndex');
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['flows'], 'readonly');
+    const objectStore = transaction.objectStore('flows');
+    const durationIndex = objectStore.index('durationIndex');
 
-  const sumRequest = durationIndex.openCursor();
+    const sumRequest = durationIndex.openCursor();
 
-  let sum = 0;
+    let sum = 0;
 
-  sumRequest.onsuccess = (event) => {
-    const cursor = event.target.result;
-    if (cursor) {
-      sum += cursor.value.duration;
-      cursor.continue();
-    } else {
-      console.log('Total duration sum:', sum);
-    }
-  };
+    sumRequest.onsuccess = (event) => {
+      const cursor = event.target.result;
+      if (cursor) {
+        sum += cursor.value.duration;
+        cursor.continue();
+      } else {
+        console.log('Total duration sum:', sum);
+        resolve({ sum: sum, message: 'Total duration sum logged' });
+      }
+    };
 
-  sumRequest.onerror = (event) => {
-    console.error('Error calculating sum:', event.target.error);
-  };
+    sumRequest.onerror = (event) => {
+      console.error('Error calculating sum:', event.target.error);
+      reject(event.target.error);
+    };
+  });
 }
 
 function router() {
@@ -134,6 +168,7 @@ function router() {
     console.log('stopping the timer');
     initHomePage();
     saveTime();
+    calculateTotalFocusTime();
   } else {
     console.log('starting the timer');
     initWorkPage();
@@ -177,13 +212,60 @@ function setupNavbar() {
       clearClasses();
       linkElement.classList.add('active');
       addSelected(contentID);
+      refreshEverything();
     });
   }
 
   buttonSetup(homeLink, 'homeContent');
   buttonSetup(statsLink, 'statsContent');
   buttonSetup(settingsLink, 'settingsContent');
+
 }
+
+function msToTime(duration) {
+  var minutes = Math.floor((duration / (1000 * 60)) % 60),
+    hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
+
+  hours = (hours < 10) ? "0" + hours : hours;
+  minutes = (minutes < 10) ? "0" + minutes : minutes;
+
+  return hours + ":" + minutes
+}
+
+// dit kan eigenlijk wel beter, want dit is alleen nodig voor 'stats'
+function refreshEverything() {
+  calculateTotalFocusTime()
+    .then((result) => {
+      const totalSeconds = result.sum;
+
+      document.getElementById('totalTime').innerHTML = "total time focused: " + msToTime(totalSeconds);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
+var yValues = [55, 49, 44, 24, 15];
+var barColors = ["red", "green", "blue", "orange", "brown"];
+
+new Chart("myChart", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: { display: false },
+    title: {
+      display: true,
+      text: "World Wine Production 2018"
+    }
+  }
+});
 
 function initHomePage() {
   // UI
