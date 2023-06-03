@@ -1,4 +1,4 @@
-// TODO can we do in a better way? 
+// improve this 
 import { getLocalStorageItem, setLocalStorageItem } from './localStorageUtils.js';
 
 const dbName = 'totalflowDB';
@@ -20,6 +20,17 @@ document.addEventListener('DOMContentLoaded', function () {
       calculateTotalFocusTime();
       loadExtension();
       setupNavbar();
+
+      new Chart("myChart", {
+        type: "bar",
+        data: {
+          labels: xValues,
+          datasets: [{
+            backgroundColor: barColors,
+            data: yValues
+          }]
+        }
+      });
     })
     .catch(function (error) {
       // Handle any errors that occur during setupDatabase()
@@ -239,6 +250,7 @@ function refreshEverything() {
       const totalSeconds = result.sum;
 
       document.getElementById('totalTime').innerHTML = "total time focused: " + msToTime(totalSeconds);
+
     })
     .catch((error) => {
       console.error(error);
@@ -248,24 +260,6 @@ function refreshEverything() {
 var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
 var yValues = [55, 49, 44, 24, 15];
 var barColors = ["red", "green", "blue", "orange", "brown"];
-
-new Chart("myChart", {
-  type: "bar",
-  data: {
-    labels: xValues,
-    datasets: [{
-      backgroundColor: barColors,
-      data: yValues
-    }]
-  },
-  options: {
-    legend: { display: false },
-    title: {
-      display: true,
-      text: "World Wine Production 2018"
-    }
-  }
-});
 
 function initHomePage() {
   // UI
